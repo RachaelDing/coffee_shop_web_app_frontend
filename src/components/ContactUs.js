@@ -1,20 +1,12 @@
 import React, { Component } from 'react';
 
 
-class ContactUs extends Component {
-    constructor(props) {
-        super(props)
-    }
-
-
-
-    render (){
-        return  (
+const ContactUs =(props) => {
+    return  (
             <>
-
+            aaa
             </>
-      );
-    }
+    );
 }
 
 export default ContactUs;

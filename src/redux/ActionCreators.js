@@ -143,7 +143,7 @@ export const getUsers =  () => {
 		    }
 
 		    response = await response.json();
-		    console.log(response)
+		    console.log(response);
 		    dispatch(addUsers(response));
 		}
 		catch(err){
@@ -184,8 +184,8 @@ export const deleteUser = (user) => {
 		    }
 
 		    response = await response.json();
-		    console.log(response)
-		    dispatch(getUsers(response));
+		    console.log(response);
+		    dispatch(getUsers());
 
 		}
 		catch(err){
@@ -240,11 +240,11 @@ export const getDrinks =  () => {
 		    }
 
 		    response = await response.json();
-		    console.log(response)
+		    console.log(response);
 		    dispatch(addDrinks(response));
 		}
 		catch(err){
-            drinksFailure();
+            dispatch(drinksFailure());
 		}
     }
 }
@@ -270,7 +270,6 @@ export const drinksFailure = (errMess) =>({
 
 export const postDrink =  (drink) => {
     return async (dispatch) => {
-    	console.log("@@@@@@@@@@@@@@@@")
         var bearer = 'Bearer '+ localStorage.getItem('token');
 	    try {
 		    var response = await fetch(baseUrl + 'menu/', {
@@ -287,9 +286,7 @@ export const postDrink =  (drink) => {
 		    }
             response = await response.json();
 		    if (response.success) {
-		    	console.log("@@@@@@@@@@@@@@@@")
-		    	console.log(response)
-		    	console.log("@@@@@@@@@@@@@@@@")
+		    	console.log(response);
 		    	dispatch(addNewDrink(drink));
 		    }
 
@@ -297,5 +294,106 @@ export const postDrink =  (drink) => {
 	    catch(err) {
 	    	dispatch(drinksFailure(err.message));
 	    }
+	}
+};
+
+export const getComments =  () => {
+    return async (dispatch) => {
+    	dispatch(commentsLoading());
+	    try {
+
+		    var response = await fetch(baseUrl + 'comments/', {
+		        method: 'GET',
+		        headers: { 'Content-Type':'application/json'},
+		    });
+
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+
+		    response = await response.json();
+		    console.log(response);
+		    dispatch(addComments(response));
+		}
+		catch(err){
+            commentsFailure();
+		}
+    }
+};
+
+export const addComments = (comments) => ({
+    type : ActionTypes.ADD_COMMENTS,
+    comments
+});
+
+export const addNewComment = (comment) => ({
+    type : ActionTypes.ADD_NEW_COMMENT,
+    comment
+});
+
+export const commentsLoading = () => ({
+	type : ActionTypes.COMMENTS_LOADING
+});
+
+export const commentsFailure = (errMess) =>({
+	type : ActionTypes.COMMENTS_FAILURE,
+    errMess
+});
+
+export const postComment =  (comment) => {
+    return async (dispatch) => {
+        var bearer = 'Bearer '+ localStorage.getItem('token');
+	    try {
+		    var response = await fetch(baseUrl + 'comments/', {
+		        method: 'POST',
+		        headers: { 'Content-Type':'application/json' ,
+		                    'Authorization': bearer},
+		        body: JSON.stringify(comment)
+		    });
+            
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+            response = await response.json();
+		    if (response.success) {
+		    	console.log(response);
+		    	dispatch(addNewComment(comment));
+		    }
+
+	    }
+	    catch(err) {
+	    	dispatch(commentsFailure(err.message));
+	    }
+	}
+};
+
+export const deleteComment = (comment) => {
+	return async (dispatch) => {
+		var bearer = 'Bearer '+ localStorage.getItem('token');
+		try {		 
+			var response = await fetch(baseUrl + 'comments/'+comment._id, {
+		        method: 'DELETE',
+		        headers: { 'Content-Type':'application/json',
+		                   'Authorization': bearer },
+		    });
+
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+
+		    response = await response.json();
+		    console.log(response);
+		    dispatch(getComments());
+
+		}
+		catch(err){
+            commentsFailure();
+		}		
 	}
 };

@@ -2,24 +2,25 @@ import React, { Component } from 'react';
 import { Row, Card, CardImg, CardBody, CardTitle, Button, Modal, ModalHeader, ModalBody, 
 	Input, Label, Form, FormGroup } from 'reactstrap';
 import { baseUrl } from '../shared/baseUrl';
+import { Link } from 'react-router-dom';
 
 function RenderItem ({drink}){
 	return(
-		<div className="col-10 col-md-5 m-1">
-	        <Card>
-	            <CardImg src={baseUrl+"images/"+drink.image} className ="card-img-top"/>
-	            <CardBody>
-	                <CardTitle>{drink.name}</CardTitle>
-	            </CardBody>
-	        </Card>
-	    </div>
+        <Link to={`/menu/${drink._id}`}>
+    		<div className="col-10 col-md-5 m-1">
+    	        <Card>
+    	            <CardImg src={baseUrl+"images/"+drink.image} className ="card-img-top"/>
+    	            <CardBody>
+    	                <CardTitle>{drink.name}</CardTitle>
+    	            </CardBody>
+    	        </Card>
+    	    </div>
+        </Link>
     );
 }
 
 
-
-class Menu extends Component {
-
+class AddDrinkForm extends Component {
     constructor(props) {
         super(props);
 
@@ -44,71 +45,9 @@ class Menu extends Component {
         event.preventDefault();
     }
 
-
-
-
-	render (){
-		var recommended = this.props.drinks.drinks.map((drink) => {
-			if (drink.recommended){
-				return (
-					<RenderItem drink = {drink}/>
-				)
-			}
-            return null
-		});
-		var coffee = this.props.drinks.drinks.map((drink) => {
-			if (drink.type === "Coffee"){
-				return (
-					<RenderItem drink = {drink}/>
-				)
-			}
-            return null
-		});
-		var coldDrink = this.props.drinks.drinks.map((drink) => {
-			if (drink.type === "ColdDrink"){
-				return (
-					<RenderItem drink = {drink}/>
-				)
-			}
-            return null
-		});
-		var Other = this.props.drinks.drinks.map((drink) => {
-			if (drink.type === "Other"){
-				return (
-					<RenderItem drink = {drink}/>
-				)
-			}
-            return null
-		});
-
-        return ( 
+    render (){
+         return ( 
             <>
-            <div>
-	            <Row className=" justify-content-center" >
-	                <h5>Recommended</h5>
-	            </Row>
-	            <Row className="m-1 justify-content-center" >
-	                {recommended}
-	            </Row>
-	            <Row className=" justify-content-center" >
-	                <h5>Coffee</h5>
-	            </Row>
-	            <Row className="m-1 justify-content-center" >
-	                {coffee}
-	            </Row>
-	            <Row className=" justify-content-center" >
-	                <h5>Cold Drinks</h5>
-	            </Row>
-	            <Row className="m-1 justify-content-center" >
-	                {coldDrink}
-	            </Row>
-	            <Row className=" justify-content-center" >
-	                <h5>Others</h5>
-	            </Row>
-	            <Row className="m-1 justify-content-center" >
-	                {Other}
-	            </Row>
-            </div>
             { (this.props.user.loggedIn && this.props.user.user.isAdmin)?
                 <Button color="success" onClick={this.toggleAddDrinkModal}>
                     Add Drink
@@ -156,9 +95,79 @@ class Menu extends Component {
                 </ModalBody>
             </Modal>
             </>
-  		);
-		}
+        );
+    }
+}
 
+
+const Menu = (props) => {
+		var recommended = props.drinks.drinks.map((drink) => {
+			if (drink.recommended){
+				return (
+					<RenderItem drink = {drink} key = {drink._id}/>
+				)
+			}
+            return null
+		});
+		var coffee = props.drinks.drinks.map((drink) => {
+			if (drink.type === "Coffee"){
+				return (
+					<RenderItem drink = {drink} key = {drink._id}/>
+				)
+			}
+            return null
+		});
+		var coldDrink = props.drinks.drinks.map((drink) => {
+			if (drink.type === "ColdDrink"){
+				return (
+					<RenderItem drink = {drink} key = {drink._id}/>
+				)
+			}
+            return null
+		});
+		var Other = props.drinks.drinks.map((drink) => {
+			if (drink.type === "Other"){
+				return (
+					<RenderItem drink = {drink} key = {drink._id}/>
+				)
+			}
+            return null
+		});
+
+        return ( 
+            <>
+            <div>
+	            <Row className=" justify-content-center" >
+	                <h5>Recommended</h5>
+	            </Row>
+	            <Row className="m-1 justify-content-center" >
+	                {recommended}
+	            </Row>
+	            <Row className=" justify-content-center" >
+	                <h5>Coffee</h5>
+	            </Row>
+	            <Row className="m-1 justify-content-center" >
+	                {coffee}
+	            </Row>
+	            <Row className=" justify-content-center" >
+	                <h5>Cold Drinks</h5>
+	            </Row>
+	            <Row className="m-1 justify-content-center" >
+	                {coldDrink}
+	            </Row>
+	            <Row className=" justify-content-center" >
+	                <h5>Others</h5>
+	            </Row>
+	            <Row className="m-1 justify-content-center" >
+	                {Other}
+	            </Row>
+            </div>
+            <div>
+                <AddDrinkForm user = {props.user}
+                              postDrink = {props.postDrink}/>
+            </div>
+            </>
+  		);
 }
 
 export default Menu
