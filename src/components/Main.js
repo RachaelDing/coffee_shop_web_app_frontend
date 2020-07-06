@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { login, logout, signup, deleteUser, postUser, getDrinks, postDrink, 
-		getComments, postComment, deleteComment } from '../redux/ActionCreators';
+		getComments, postComment, deleteComment, deleteDrink, updateDrink } from '../redux/ActionCreators';
 import Header from './Header';
 import ManageUsers from './ManageUsers'
 import ContactUs from './ContactUs';
@@ -33,6 +33,8 @@ const mapDispatchToProps = (dispatch) => ({
     getComments: () => dispatch(getComments()),
     postComment: (comment) => dispatch(postComment(comment)),
     deleteComment: (comment)=>dispatch(deleteComment(comment)),
+    deleteDrink: (drink) => dispatch(deleteDrink(drink)),
+    updateDrink: (drink) => dispatch(updateDrink(drink)),
 });
 
 
@@ -62,7 +64,9 @@ class Main extends Component {
 	      <Route path="/home" component = {Home}/>
 	      <Route exact path="/menu" component = {() => <Menu user = {this.props.user}
 	                                                   drinks = {this.props.drinks}
-	                                                   postDrink = {this.props.postDrink}/>}/>
+	                                                   postDrink = {this.props.postDrink}
+	                                                   deleteDrink = {this.props.deleteDrink}
+	                                                   updateDrink = {this.props.updateDrink}/>}/>
 	      <Route path = "/menu/:drinkId" component= {DrinkDetail} />
 	      <Route exact path="/manageusers" component={() => <ManageUsers users = {this.props.users} 
 	                                                                     deleteUser = {this.props.deleteUser}

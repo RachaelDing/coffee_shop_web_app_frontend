@@ -297,6 +297,60 @@ export const postDrink =  (drink) => {
 	}
 };
 
+export const deleteDrink = (drink) => {
+	return async (dispatch) => {
+		var bearer = 'Bearer '+ localStorage.getItem('token');
+		try {		 
+			var response = await fetch(baseUrl + 'menu/'+drink._id, {
+		        method: 'DELETE',
+		        headers: { 'Content-Type':'application/json',
+		                   'Authorization': bearer },
+		    });
+
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+
+		    response = await response.json();
+		    console.log(response);
+		    dispatch(getDrinks());
+
+		}
+		catch(err){
+            drinksFailure();
+		}		
+	}
+};
+
+export const updateDrink = (drink) => {
+	return async (dispatch) => {
+		var bearer = 'Bearer '+ localStorage.getItem('token');
+		try {		 
+			var response = await fetch(baseUrl + 'menu/'+drink._id, {
+		        method: 'PUT',
+		        headers: { 'Content-Type':'application/json',
+		                   'Authorization': bearer },
+		                    body: JSON.stringify(drink)
+		    });
+
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+
+		    response = await response.json();
+		    dispatch(getDrinks());
+
+		}
+		catch(err){
+            drinksFailure();
+		}		
+	}
+};
+
 export const getComments =  () => {
     return async (dispatch) => {
     	dispatch(commentsLoading());
