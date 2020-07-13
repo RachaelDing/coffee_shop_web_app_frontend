@@ -4,6 +4,7 @@ import { Comments } from './comments';
 import { Members } from './members';
 import { Authentication } from './authentication';
 import { Users } from './users';
+import { Feedbacks } from './feedbacks';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 
@@ -12,7 +13,7 @@ export const ConfigureStore = () => {
         combineReducers({
             drinks: Drinks,
             comments: Comments,
-            members: Members,
+            feedbacks: Feedbacks,
             user: Authentication,
             users: Users,
         }),

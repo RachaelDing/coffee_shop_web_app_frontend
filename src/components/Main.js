@@ -2,9 +2,11 @@ import React,{Component} from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { login, logout, signup, deleteUser, postUser, getDrinks, postDrink, 
-		getComments, postComment, deleteComment, deleteDrink, updateDrink } from '../redux/ActionCreators';
+		getComments, postComment, deleteComment, deleteDrink, updateDrink, 
+		postFeedback, deleteFeedback, getUsers, getFeedbacks } from '../redux/ActionCreators';
 import Header from './Header';
 import ManageUsers from './ManageUsers'
+import ManageFeedbacks from './ManageFeedbacks'
 import ContactUs from './ContactUs';
 import Home from './Home';
 import Menu from './Menu';
@@ -16,7 +18,7 @@ const mapStateToProps = (state) => {
   return {
     drinks: state.drinks,
     comments: state.comments,
-    members: state.members,
+    feedbacks: state.feedbacks,
     user: state.user,
     users: state.users,
   }
@@ -35,6 +37,10 @@ const mapDispatchToProps = (dispatch) => ({
     deleteComment: (comment)=>dispatch(deleteComment(comment)),
     deleteDrink: (drink) => dispatch(deleteDrink(drink)),
     updateDrink: (drink) => dispatch(updateDrink(drink)),
+    postFeedback: (feedback) => dispatch(postFeedback(feedback)),
+    deleteFeedback: (feedback) => dispatch(deleteFeedback(feedback)),
+    getFeedbacks : () => dispatch(getFeedbacks()),
+    getUsers : () => dispatch(getUsers()),
 });
 
 
@@ -42,6 +48,8 @@ class Main extends Component {
 	 componentDidMount() {
 	 	this.props.getDrinks();
 	 	this.props.getComments();
+	 	this.props.getUsers();
+	 	this.props.getFeedbacks();
 	 }
 
 	render() {
@@ -72,7 +80,9 @@ class Main extends Component {
 	                                                                     deleteUser = {this.props.deleteUser}
 	                                                                     postUser = {this.props.postUser}/>} />
 	      <Route exact path="/contactus" component={() => <ContactUs postFeedback={this.props.postFeedback} />} />
-	      
+	      <Route exact path="/managefeedbacks" component={() => <ManageFeedbacks feedbacks = {this.props.feedbacks} 
+	                                                                     deleteFeedback = {this.props.deleteFeedback}
+	                                                                     />} />
 	      <Redirect to="/home" />
 	    </Switch>
 	  </div>

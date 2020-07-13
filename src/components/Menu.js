@@ -113,20 +113,20 @@ class AddDrinkForm extends Component {
         super(props);
 
         this.state = {
-            addDrinkModalOpen: false,
+            modalIsOpen: false,
         };  
-        this.toggleAddDrinkModal = this.toggleAddDrinkModal.bind(this);   
+        this.toggleModal = this.toggleModal.bind(this);   
         this.handleAddDrink = this.handleAddDrink.bind(this);  
     }
 
-    toggleAddDrinkModal() {
+    toggleModal() {
       this.setState({
-        addDrinkModalOpen: !this.state.addDrinkModalOpen
+        modalIsOpen: !this.state.modalIsOpen
       });
     }
 
     handleAddDrink(event){
-        this.toggleAddDrinkModal();
+        this.toggleModal();
         this.props.postDrink({name: this.name.value, description: this.description.value,
                            image: this.image.value, type: this.type.value,
                            recommended: this.recommended.value}); 
@@ -136,13 +136,13 @@ class AddDrinkForm extends Component {
          return ( 
             <>
             { (this.props.user.loggedIn && this.props.user.user.isAdmin)?
-                <Button color="success" onClick={this.toggleAddDrinkModal}>
+                <Button color="success" onClick={this.toggleModal}>
                     Add Drink
                 </Button>
                 : null
             }
-            <Modal isOpen={this.state.addDrinkModalOpen} toggle={this.toggleAddDrinkModal}>
-                <ModalHeader toggle={this.toggleAddDrinkModal}>ADD DRINK</ModalHeader>
+            <Modal isOpen={this.state.modalIsOpen} toggle={this.toggleModal}>
+                <ModalHeader toggle={this.toggleModal}>ADD DRINK</ModalHeader>
                 <ModalBody>
                     <Form onSubmit={this.handleAddDrink}>
                         <FormGroup>

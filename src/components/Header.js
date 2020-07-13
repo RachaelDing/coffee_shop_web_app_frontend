@@ -88,11 +88,18 @@ class Header extends Component {
                                 </NavLink>
                             </NavItem>
                             { (this.props.user.loggedIn && this.props.user.user.isAdmin)?
+                                <>
                                 <NavItem>
                                     <NavLink className="nav-link" to='/manageusers'>
                                         Manage Users
                                     </NavLink>
                                 </NavItem>
+                                <NavItem>
+                                    <NavLink className="nav-link" to='/managefeedbacks'>
+                                        Manage Feedbacks
+                                    </NavLink>
+                                </NavItem>
+                                </>
                                 : null
                             }
                             </Nav>

@@ -48,6 +48,7 @@ export const login =  (user) => {
 	            dispatch(loginSuccess(response.token));
 	            if(user.isAdmin) {
 	            	dispatch(getUsers());
+	            	dispatch(getFeedbacks());
 	            }
 	        }
 	        else {
@@ -118,10 +119,12 @@ export const logoutSuccess = () => {
 };
 
 export const logout = () => (dispatch) => {
-	dispatch(requestLogout())
+	dispatch(requestLogout());
 	localStorage.removeItem('token');
 	localStorage.removeItem('user');
-	dispatch(logoutSuccess())
+	dispatch(getUsers());
+	dispatch(getFeedbacks());
+	dispatch(logoutSuccess());
 }
 
 export const getUsers =  () => {
@@ -150,7 +153,7 @@ export const getUsers =  () => {
             usersFailure();
 		}
     }
-}
+};
 
 export const addUsers = (users) => ({
     type : ActionTypes.ADD_USERS,
@@ -448,6 +451,106 @@ export const deleteComment = (comment) => {
 		}
 		catch(err){
             commentsFailure();
+		}		
+	}
+};
+
+export const postFeedback =  (feedback) => {
+    return async (dispatch) => {
+    	console.log("eeeeeeeeeeeeeeeeeee")
+    	console.log(feedback)
+        var bearer = 'Bearer '+ localStorage.getItem('token');
+	    try {
+		    var response = await fetch(baseUrl + 'feedbacks/', {
+		        method: 'POST',
+		        headers: { 'Content-Type':'application/json' ,
+		                    'Authorization': bearer},
+		        body: JSON.stringify(feedback)
+		    });
+            
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+            response = await response.json();
+		    if (response.success) {
+		    	console.log("??????????????????????????????????????????");
+		    	console.log(response);
+		    }
+
+	    }
+	    catch(err) {
+	    	dispatch(drinksFailure(err.message));
+	    }
+	}
+};
+
+export const getFeedbacks =  () => {
+    return async (dispatch) => {
+    	dispatch(feedbacksLoading());
+    	var bearer = 'Bearer '+ localStorage.getItem('token');
+	    try {
+
+		    var response = await fetch(baseUrl + 'feedbacks/', {
+		        method: 'GET',
+		        headers: { 'Content-Type':'application/json',
+		                   'Authorization': bearer },
+		    });
+
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+
+		    response = await response.json();
+		    console.log(response);
+		    dispatch(addFeedbacks(response));
+		}
+		catch(err){
+            feedbacksFailure();
+		}
+    }
+};
+
+export const addFeedbacks = (feedbacks) => ({
+    type : ActionTypes.ADD_FEEDBACKS,
+    feedbacks
+});
+
+export const feedbacksLoading = () => ({
+	type : ActionTypes.FEEDBACKS_LOADING
+});
+
+export const feedbacksFailure = (errMess) =>({
+	type : ActionTypes.FEEDBACKS_FAILURE,
+    errMess
+});
+
+export const deleteFeedback = (feedback) => {
+	return async (dispatch) => {
+		var bearer = 'Bearer '+ localStorage.getItem('token');
+		try {		 
+			var response = await fetch(baseUrl + 'feedbacks/'+feedback._id, {
+		        method: 'DELETE',
+		        headers: { 'Content-Type':'application/json',
+		                   'Authorization': bearer },
+		    });
+
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+
+		    response = await response.json();
+		    console.log(response);
+		    dispatch(getFeedbacks());
+
+		}
+		catch(err){
+            feedbacksFailure();
 		}		
 	}
 };
