@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { login, logout, signup, deleteUser, postUser, getDrinks, postDrink, 
 		getComments, postComment, deleteComment, deleteDrink, updateDrink, 
-		postFeedback, deleteFeedback, getUsers, getFeedbacks } from '../redux/ActionCreators';
+		postFeedback, deleteFeedback, getUsers, getFeedbacks, getMembers,
+		postMember, deleteMember } from '../redux/ActionCreators';
 import Header from './Header';
 import ManageUsers from './ManageUsers'
 import ManageFeedbacks from './ManageFeedbacks'
@@ -11,6 +12,7 @@ import ContactUs from './ContactUs';
 import Home from './Home';
 import Menu from './Menu';
 import MenuItem from './MenuItem';
+import AboutUs from './AboutUs';
 
 
 
@@ -21,6 +23,7 @@ const mapStateToProps = (state) => {
     feedbacks: state.feedbacks,
     user: state.user,
     users: state.users,
+    members: state.members,
   }
 }
 
@@ -41,6 +44,9 @@ const mapDispatchToProps = (dispatch) => ({
     deleteFeedback: (feedback) => dispatch(deleteFeedback(feedback)),
     getFeedbacks : () => dispatch(getFeedbacks()),
     getUsers : () => dispatch(getUsers()),
+    getMembers: () => dispatch(getMembers()),
+    postMember: (member) =>dispatch(postMember(member)),
+    deleteMember: (member) =>dispatch(deleteMember(member)),
 });
 
 
@@ -50,6 +56,7 @@ class Main extends Component {
 	 	this.props.getComments();
 	 	this.props.getUsers();
 	 	this.props.getFeedbacks();
+	 	this.props.getMembers();
 	 }
 
 	render() {
@@ -76,6 +83,10 @@ class Main extends Component {
 	                                                   deleteDrink = {this.props.deleteDrink}
 	                                                   updateDrink = {this.props.updateDrink}/>}/>
 	      <Route path = "/menu/:drinkId" component= {DrinkDetail} />
+	      <Route exact path="/aboutus" component={() => <AboutUs members = {this.props.members}
+	      														 user = {this.props.user}
+	      														 postMember = {this.props.postMember}
+	      														 deleteMember = {this.props.deleteMember}/>} />
 	      <Route exact path="/manageusers" component={() => <ManageUsers users = {this.props.users} 
 	                                                                     deleteUser = {this.props.deleteUser}
 	                                                                     postUser = {this.props.postUser}/>} />

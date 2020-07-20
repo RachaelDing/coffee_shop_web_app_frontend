@@ -7,3 +7,24 @@
     height: 30vw;
     object-fit: cover;
 }
+
+.aboutus-img {
+    width: 100%;
+    height: 30vw;
+    float: left;
+    object-fit: cover;
+}
+
+.aboutus-text{
+	width: 60%;
+    height: 30vw;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 190%;
+}
+
+.member-img {
+    width: 90%;
+    height: 25vw;
+}

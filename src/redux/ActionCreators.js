@@ -554,3 +554,104 @@ export const deleteFeedback = (feedback) => {
 		}		
 	}
 };
+
+export const addMembers = (members) => ({
+    type : ActionTypes.ADD_MEMBERS,
+    members
+});
+
+export const membersLoading = () => ({
+	type : ActionTypes.MEMBERS_LOADING
+});
+
+export const membersFailure = (errMess) =>({
+	type : ActionTypes.MEMBERS_FAILURE,
+    errMess
+});
+
+export const addNewMember = (member) => ({
+    type : ActionTypes.ADD_NEW_MEMBER,
+    member
+});
+
+export const getMembers =  () => {
+    return async (dispatch) => {
+    	dispatch(membersLoading());
+	    try {
+
+		    var response = await fetch(baseUrl + 'members/', {
+		        method: 'GET',
+		        headers: { 'Content-Type':'application/json'},
+		    });
+
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+
+		    response = await response.json();
+		    console.log(response);
+		    dispatch(addMembers(response));
+		}
+		catch(err){
+            dispatch(membersFailure());
+		}
+    }
+};
+
+export const postMember =  (member) => {
+    return async (dispatch) => {
+        var bearer = 'Bearer '+ localStorage.getItem('token');
+	    try {
+		    var response = await fetch(baseUrl + 'members/', {
+		        method: 'POST',
+		        headers: { 'Content-Type':'application/json' ,
+		                    'Authorization': bearer},
+		        body: JSON.stringify(member)
+		    });
+            
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+            response = await response.json();
+		    if (response.success) {
+		    	console.log(response);
+		    	dispatch(addNewMember(member));
+		    }
+
+	    }
+	    catch(err) {
+	    	dispatch(membersFailure(err.message));
+	    }
+	}
+};
+
+export const deleteMember = (member) => {
+	return async (dispatch) => {
+		var bearer = 'Bearer '+ localStorage.getItem('token');
+		try {		 
+			var response = await fetch(baseUrl + 'members/'+member._id, {
+		        method: 'DELETE',
+		        headers: { 'Content-Type':'application/json',
+		                   'Authorization': bearer },
+		    });
+
+		    if (!response.ok) {
+		        var err = new Error('Error ' + response.status + ': ' + response.statusText);
+		        err.response = response;
+		        throw err;
+		    }
+
+		    response = await response.json();
+		    console.log(response);
+		    dispatch(getMembers());
+
+		}
+		catch(err){
+            membersFailure();
+		}		
+	}
+};

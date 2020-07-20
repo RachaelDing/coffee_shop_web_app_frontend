@@ -16,6 +16,7 @@ export const ConfigureStore = () => {
             feedbacks: Feedbacks,
             user: Authentication,
             users: Users,
+            members: Members,
         }),
         applyMiddleware(thunk, logger)
     );
