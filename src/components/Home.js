@@ -10,7 +10,7 @@ function Home(props) {
             <>
             <div>
 	            <Row className=" justify-content-center" >
-	                <Image className="col-10 col-md-6 m-4" src= {baseUrl+"images/logo.jpg"} fluid/>
+	                <Image className="col-10 col-md-10 m-1" src= {baseUrl+"images/logo.jpg"} fluid/>
 	            </Row>
 	            <Row className="m-1 justify-content-center" >	                
 		            <div className="col-12 col-md m-1">
